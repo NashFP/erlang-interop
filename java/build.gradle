@@ -1,0 +1,36 @@
+// We'll be using groovy
+apply plugin: 'groovy'
+apply plugin: 'application'
+
+mainClassName = "nashfp.interop.Ping"
+
+// We'll pull dependencies in from maven central
+repositories {
+    mavenCentral()
+}
+
+// We'll require groovy, junit and jinterface
+dependencies {
+    groovy 'org.codehaus.groovy:groovy:1.7.10'
+    testCompile 'junit:junit:4.8.2'
+    compile 'org.erlang.otp:jinterface:1.5.6'
+}
+
+// We'll provide the gradle wrapper which allows this build to be run from systems where gradle is not installed
+task wrapper(type: Wrapper) {
+    gradleVersion = '1.0-milestone-7'
+}
+
+run{
+	rnode = project.hasProperty("rnode") ? rnode : ''
+	lnode = project.hasProperty("lnode") ? lnode : ''
+	trace = project.hasProperty("trace") ? trace : ''
+
+    args rnode, lnode, trace
+}
+
+task(console, dependsOn: 'classes', type: JavaExec) {
+  main = 'groovy.ui.Console'
+  classpath = sourceSets.main.runtimeClasspath
+  args 'scripts/interop.groovy'
+}

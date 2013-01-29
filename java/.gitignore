@@ -1,0 +1,8 @@
+# Local Gradle #
+################
+.gradle/
+
+# Build Folder #
+################
+build/
+
